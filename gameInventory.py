@@ -122,8 +122,6 @@ print_table(inv)
 # The file format is plain text with comma separated values (CSV).
 def import_inventory(inventory, filename="import_inventory.csv"):
 
-    inventory.clear()
-    
     with open(filename, 'r') as f_inv:
         reader = csv.reader(f_inv)
         list_of_items = list(reader)
