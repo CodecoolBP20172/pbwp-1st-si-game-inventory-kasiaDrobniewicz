@@ -2,6 +2,7 @@
 # so they work according to the specification
 
 import csv
+from collections import OrderedDict
 
 inv = {
     'arrow': 12,
@@ -66,6 +67,12 @@ def print_table(inventory, order=None):
     LEN_COUNT = 5
     LEN_ITEM_NAME = 9
 
+    if order == 'count,desc':
+        inventory = OrderedDict(sorted(inventory.items(), key=lambda t: t[1], reverse=True))  
+
+    if order == 'count,asc':
+        inventory = OrderedDict(sorted(inventory.items(), key=lambda t: t[1]))
+
     keys = list(inventory.keys())
  
     longest_key = max(keys, key=len)
@@ -113,7 +120,14 @@ def print_table(inventory, order=None):
 
 
 print('Step 3 ------------------------------------------------')
+print('Dictionary unstorted')
 print_table(inv)
+
+print('Dictionary storted desc')
+print_table(inv, 'count,desc')
+
+print('Dictionary storted asc')
+print_table(inv, 'count,asc')
 
 
 # Imports new inventory items from a file
@@ -132,7 +146,7 @@ def import_inventory(inventory, filename="import_inventory.csv"):
     return inventory
 
 print ('Step 4 ------------------------------------------------')
-inv_from_file = import_inventory(inv, 'test_inventory.csv')
+inv_from_file = import_inventory(inv, '/home/katarzyna/ZadaniaPython/GameInventory/test_inventory.csv')
 print_table(inv_from_file)
 
 
@@ -140,5 +154,19 @@ print_table(inv_from_file)
 # if the filename argument is None it creates and overwrites a file
 # called "export_inventory.csv". The file format is the same plain text 
 # with comma separated values (CSV).
-def export_inventory(inventory, filename="export_inventory.csv"):
-    pass
+
+
+def export_inventory(inventory, filename):
+
+    with open(filename, 'w') as f_inv:
+        for key, value in inventory.items():
+            for number_of_items in range(0, value):
+                f_inv.write(key+',')
+        f_inv.seek(0, 2)
+        size = f_inv.tell()
+        f_inv.truncate(size-1)
+
+
+export_inventory(inv2, 'inventory_kd.csv')
+
+print ('Step 5 ------------------------------------------------')
